@@ -361,14 +361,56 @@ http-server
 
 <div align="center">
 
-### **KOUSHIK**
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=28&pause=1000&color=00D4FF&center=true&vCenter=true&width=435&lines=Meet+The+Developer;KOUSHIK+HY;Full+Stack+Developer;Creative+Coder" alt="Typing SVG" />
 
-[![Portfolio](https://img.shields.io/badge/Portfolio-00D4FF?style=for-the-badge&logo=google-chrome&logoColor=white)](https://koushikhy.netlify.app)
-[![GitHub](https://img.shields.io/badge/GitHub-9933FF?style=for-the-badge&logo=github&logoColor=white)](https://github.com/koushik4475)
+<br><br>
+
+<img src="https://github.com/koushik4475.png" width="150" style="border-radius: 50%; border: 4px solid #00d4ff; box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);" alt="Koushik HY">
+
+### **KOUSHIK HY**
+
+<img src="https://user-images.githubusercontent.com/74038190/212284087-bbe7e430-757e-4901-90bf-4cd2ce3e1852.gif" width="30"> **Full Stack Developer & Creative Coder** <img src="https://user-images.githubusercontent.com/74038190/212284087-bbe7e430-757e-4901-90bf-4cd2ce3e1852.gif" width="30">
+
+<br>
+
+[![Portfolio](https://img.shields.io/badge/🌐_Portfolio-00D4FF?style=for-the-badge&logoColor=white)](https://koushikhy.netlify.app)
+[![GitHub](https://img.shields.io/badge/📦_GitHub-9933FF?style=for-the-badge&logo=github&logoColor=white)](https://github.com/koushik4475)
+[![Email](https://img.shields.io/badge/📧_Email-FF0099?style=for-the-badge&logo=gmail&logoColor=white)](mailto:koushikhy@example.com)
+
+<br>
+
+### 🚀 Tech Stack & Skills
+
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
+![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=node.js&logoColor=white)
+![Three.js](https://img.shields.io/badge/Three.js-000000?style=flat-square&logo=three.js&logoColor=white)
+
+<br>
+
+### 📊 GitHub Stats
+
+<img src="https://github-readme-stats.vercel.app/api?username=koushik4475&show_icons=true&theme=radical&hide_border=true&bg_color=0D1117&title_color=00D4FF&icon_color=9933FF&text_color=FFFFFF" alt="GitHub Stats" width="495">
+
+<br><br>
+
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=koushik4475&theme=react-dark&hide_border=true&bg_color=0D1117&color=00D4FF&line=9933FF&point=FF0099" alt="Contribution Graph" width="100%">
+
+<br>
+
+### 🏆 GitHub Trophies
+
+<img src="https://github-profile-trophy.vercel.app/?username=koushik4475&theme=radical&no-frame=true&no-bg=true&row=1&column=7&margin-w=15&margin-h=15" alt="GitHub Trophies" width="100%">
+
+<br>
 
 <img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="500">
 
 **Built with 💜 and lots of ☕**
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=100&section=footer"/>
 
 </div>
 
