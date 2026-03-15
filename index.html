@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO ENHANCEMENTS for Programmer Calculator -->
+    <meta name="description" content="Cyber Cal: The ultimate Programmer Calculator. Easily perform bitwise operations and base conversions (Binary, Hex, Decimal, Octal) in a futuristic interface. Perfect for developers.">
+    <meta name="keywords" content="Cyber Cal, Programmer Calculator, Developer Calculator, Binary Converter, Hexadecimal Calculator, Bitwise Operations, Base Conversion, KOUSHIK">
+    <meta name="author" content="KOUSHIK">
+    <meta name="theme-color" content="#0a0a16">
+    <!-- Google AdSense Verification -->
+    <meta name="google-adsense-account" content="ca-pub-8878096861679129">
+    <!-- Mobile / Android Optimization -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Open Graph/SEO Enhancements for Sharing -->
+    <meta property="og:title" content="Cyber Cal | Programmer Calculator">
+    <meta property="og:description" content="Cyber Cal is the ultimate developer tool for base conversion and bitwise logic. Fast, responsive, and cinematic.">
+    <meta property="og:image" content="favicon.png">
+    <meta property="og:url" content="https://developers-calculator.netlify.app">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- End Google AdSense Verification -->
+    <title>Cyber Cal | Programmer Calculator - Binary, Hex, Dec, Oct & Bitwise math</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Google AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8878096861679129"
+        crossorigin="anonymous"></script>
+    <!-- End Google AdSense Script -->
+    <style>
+        /* Base Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a16 0%, #1a1030 50%, #0a0a16 100%);
+            color: #e0e0ff;
+            overflow-y: auto;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        #container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            gap: 60px;
+        }
+        
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        /* Calculator Shell */
+        #calculator {
+            position: relative;
+            width: 440px;
+            max-width: 95vw;
+            background: rgba(16, 18, 37, 0.95);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 60px rgba(0, 191, 255, 0.5),
+                        0 0 120px rgba(147, 51, 234, 0.3),
+                        inset 0 0 30px rgba(0, 150, 255, 0.15);
+            z-index: 10;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            border: 2px solid rgba(0, 191, 255, 0.5);
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 60px rgba(0, 191, 255, 0.5), 0 0 120px rgba(147, 51, 234, 0.3), inset 0 0 30px rgba(0, 150, 255, 0.15); }
+            50% { box-shadow: 0 0 80px rgba(0, 212, 255, 0.7), 0 0 150px rgba(160, 60, 250, 0.5), inset 0 0 40px rgba(0, 170, 255, 0.2); }
+        }
+        
+        .title-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(0, 191, 255, 0.4);
+        }
+        
+        .title {
+            font-size: clamp(20px, 4vw, 26px);
+            font-weight: 900;
+            background: linear-gradient(90deg, #00d4ff, #0099ff, #9933ff, #ff0099);
+            background-size: 300% 300%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-shift 4s ease infinite;
+            letter-spacing: 2px;
+        }
+        
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .subtitle {
+            font-size: clamp(10px, 1.6vw, 12px);
+            color: #6a89cc;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+        }
+
+        /* Developer link/button in title bar */
+        .dev-btn {
+            display: inline-block;
+            padding: 8px 12px;
+            background: linear-gradient(90deg, rgba(0,212,255,0.12), rgba(147,51,234,0.12));
+            color: #9fe6ff;
+            border: 1px solid rgba(0,212,255,0.18);
+            border-radius: 10px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 6px 18px rgba(0,212,255,0.06);
+            transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s;
+            font-size: 11px;
+        }
+
+        .dev-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            filter: brightness(1.12);
+        }
+        
+        /* Mode Selector */
+        .mode-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            background: rgba(10, 12, 28, 0.6);
+            padding: 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 191, 255, 0.2);
+        }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 8px;
+            color: #6a89cc;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        
+        .mode-btn.active {
+            background: linear-gradient(135deg, #2979ff, #00b0ff);
+            border-color: #00b0ff;
+            color: white;
+            box-shadow: 0 0 20px rgba(0, 176, 255, 0.6);
+        }
+        
+        /* Display Area */
+        #display {
+            height: 100px;
+            background: rgba(10, 12, 28, 0.95);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 12px 18px;
+            overflow: hidden;
+            box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8), inset 0 0 12px rgba(0, 191, 255, 0.15);
+            border: 2px solid rgba(0, 191, 255, 0.25);
+            position: relative;
+        }
+        
+        #display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 191, 255, 0.5), transparent);
+        }
+        
+        /* Input/Expression Display */
+        #expression {
+            font-size: 13px;
+            color: #9aa7ff;
+            height: 24px;
+            width: 100%;
+            text-align: right;
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            margin-bottom: 8px;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        /* Result Display */
+        #result {
+            font-size: 42px;
+            font-weight: 800;
+            color: #00d4ff;
+            min-height: 50px;
+            height: auto;
+            width: 100%;
+            text-align: right;
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.8), 0 0 40px rgba(0, 150, 255, 0.5);
+            letter-spacing: 1px;
+            line-height: 1;
+            padding: 8px 4px;
+            display: inline-block;
+        }
+
+        /* Make sure the result container can be scaled horizontally without clipping */
+        #display .result-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Custom Scrollbars */
+        #expression::-webkit-scrollbar,
+        #result::-webkit-scrollbar,
+        #calculator::-webkit-scrollbar {
+            height: 4px;
+            width: 4px;
+        }
+        
+        #expression::-webkit-scrollbar-track,
+        #result::-webkit-scrollbar-track,
+        #calculator::-webkit-scrollbar-track {
+            background: rgba(0, 191, 255, 0.05);
+        }
+        
+        #expression::-webkit-scrollbar-thumb,
+        #result::-webkit-scrollbar-thumb,
+        #calculator::-webkit-scrollbar-thumb {
+            background: rgba(0, 191, 255, 0.6);
+            border-radius: 5px;
+        }
+
+        /* Programmer Conversion Display */
+        #programmer-conversions {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            padding: 15px;
+            background: rgba(10, 12, 28, 0.95);
+            border-radius: 15px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            box-shadow: inset 0 0 10px rgba(0, 191, 255, 0.1);
+        }
+
+        #programmer-conversions.show {
+            display: flex;
+        }
+
+        .conversion-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .conversion-label {
+            color: #ff0099;
+            font-weight: 700;
+            width: 40px;
+        }
+
+        .conversion-value {
+            flex-grow: 1;
+            text-align: right;
+            color: #00d4ff;
+            font-weight: 500;
+            padding: 2px 5px;
+            background: rgba(0, 191, 255, 0.05);
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        /* Sections */
+        .scientific-section, .programmer-keypad {
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .scientific-section.show, .programmer-keypad.show {
+            display: block;
+        }
+        
+        .section-title {
+            font-size: 11px;
+            color: #6a89cc;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        
+        /* Keypad Styling */
+        #keypad-basic, .sci-grid, .prog-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(64px, 1fr));
+            grid-gap: 12px;
+        }
+        
+        .key {
+            background: rgba(20, 25, 50, 0.88);
+            border: none;
+            border-radius: 10px;
+            color: #e8f0ff;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+            box-shadow: 0 8px 26px rgba(0, 0, 0, 0.55), 0 0 18px rgba(0, 191, 255, 0.22);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 191, 255, 0.38);
+            min-height: 58px;
+            padding: 6px 8px;
+        }
+        
+        .key::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+        
+        .key:hover::before {
+            left: 100%;
+        }
+        
+        .key:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 12px 36px rgba(0, 191, 255, 0.72), 0 0 22px rgba(0, 191, 255, 0.52);
+            background: rgba(34, 44, 80, 0.98);
+        }
+        
+        .key:active {
+            transform: translateY(2px) scale(0.98);
+            box-shadow: 0 3px 15px rgba(0, 191, 255, 0.3);
+        }
+        
+        /* Key Variants */
+        .operator {
+            background: linear-gradient(135deg, rgba(40, 50, 100, 0.9), rgba(50, 60, 120, 0.9));
+            color: #00d4ff;
+            border: 1px solid rgba(0, 212, 255, 0.5);
+        }
+        
+        .equals {
+            background: linear-gradient(135deg, #2979ff, #00b0ff);
+            color: white;
+            grid-column: span 2;
+            font-size: 20px;
+            border: 1px solid rgba(0, 212, 255, 0.6);
+        }
+        
+        .clear {
+            background: linear-gradient(135deg, rgba(200, 50, 80, 0.9), rgba(220, 40, 60, 0.9));
+            color: white;
+            border: 1px solid rgba(255, 100, 100, 0.5);
+        }
+        
+        .special {
+            background: linear-gradient(135deg, #9c27b0, #e91e63);
+            color: white;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            grid-column: span 1;
+            border: 1px solid rgba(233, 30, 99, 0.6);
+        }
+        
+        .scientific, .programmer {
+            background: linear-gradient(135deg, rgba(80, 60, 150, 0.8), rgba(100, 70, 180, 0.8));
+            color: #a8c5ff;
+            border: 1px solid rgba(168, 197, 255, 0.4);
+            font-size: 13px;
+        }
+
+        .programmer-hex {
+            background: rgba(255, 100, 0, 0.8);
+            color: #fff;
+            font-size: 16px;
+            border: 1px solid rgba(255, 150, 50, 0.6);
+        }
+
+        /* Programmer UI Elements */
+        .prog-base-selector {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+            background: rgba(10, 12, 28, 0.6);
+            padding: 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 191, 255, 0.2);
+        }
+
+        .base-btn {
+            padding: 5px 10px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: #6a89cc;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .base-btn.active {
+            color: #00d4ff;
+            background: rgba(0, 176, 255, 0.2);
+            box-shadow: 0 0 10px rgba(0, 176, 255, 0.4);
+        }
+        
+        .particle-counter {
+            font-size: 10px;
+            color: #6a89cc;
+            background: rgba(0, 191, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+        }
+        
+        .glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border-radius: 25px;
+            box-shadow: 0 0 80px rgba(0, 191, 255, 0.8);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .active-glow {
+            opacity: 1;
+        }
+        
+        .sci-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(64px, 1fr));
+            grid-gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .sci-grid .key {
+            min-height: 54px;
+            font-size: 14px;
+        }
+
+        /* Mobile layout - matches screenshot */
+        @media (max-width: 600px) {
+            body {
+                overflow: auto;
+            }
+
+            #container {
+                padding: 15px;
+                align-items: flex-start;
+            }
+
+            #calculator {
+                width: 100%;
+                max-width: 440px;
+                padding: 18px;
+                border-radius: 18px;
+                margin: 0 auto;
+            }
+
+            .title-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+
+            .title-bar > div:last-child {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            #display {
+                height: 90px;
+                padding: 10px 15px;
+            }
+
+            #result {
+                font-size: 36px;
+            }
+
+            #expression {
+                font-size: 13px;
+            }
+
+            .key {
+                min-height: 52px;
+                font-size: 16px;
+                border-radius: 10px;
+            }
+
+            #keypad-basic, .sci-grid, .prog-grid {
+                grid-gap: 10px;
+            }
+
+            .sci-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .sci-grid .key {
+                min-height: 50px;
+                font-size: 14px;
+            }
+
+            .mode-btn {
+                padding: 10px;
+                font-size: 11px;
+            }
+        }
+
+        /* Desktop layout */
+        @media (min-width: 601px) {
+            #calculator {
+                width: 440px;
+                padding: 22px;
+            }
+
+            #keypad-basic, .sci-grid, .prog-grid {
+                grid-gap: 12px;
+            }
+
+            .key {
+                min-height: 58px;
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="canvas-container"></div>
+        <div class="glow" id="calculator-glow"></div>
+        <div id="calculator">
+            <div class="title-bar">
+                <div>
+                    <h1 class="title">CYBER CAL</h1>
+                    <div class="subtitle">Advanced Computation System</div>
+                </div>
+                <div style="display:flex;gap:10px;align-items:center;">
+                    <a class="dev-btn" href="https://koushikhy.netlify.app" target="_blank" rel="noopener">View Developer</a>
+                    <div class="particle-counter">Particles: <span id="particle-count">0</span></div>
+                </div>
+            </div>
+            
+            <div class="mode-selector">
+                <button class="mode-btn active" data-mode="basic">Basic</button>
+                <button class="mode-btn" data-mode="scientific">Scientific</button>
+                <button class="mode-btn" data-mode="programmer">Programmer</button>
+            </div>
+            
+            <!-- Main Display Area -->
+            <div id="display">
+                <div id="expression"></div>
+                <div class="result-wrapper"><div id="result">0</div></div>
+            </div>
+
+            <!-- Programmer Conversions Display -->
+            <div id="programmer-conversions">
+                <div class="conversion-item"><span class="conversion-label">HEX:</span> <div class="conversion-value" id="conv-hex">0</div></div>
+                <div class="conversion-item"><span class="conversion-label">DEC:</span> <div class="conversion-value" id="conv-dec">0</div></div>
+                <div class="conversion-item"><span class="conversion-label">OCT:</span> <div class="conversion-value" id="conv-oct">0</div></div>
+                <div class="conversion-item"><span class="conversion-label">BIN:</span> <div class="conversion-value" id="conv-bin">0</div></div>
+            </div>
+            
+            <!-- Scientific Mode Keypad -->
+            <div class="scientific-section" id="scientific-section">
+                <div class="section-title">Trigonometry (Input in Degrees)</div>
+                <div class="sci-grid">
+                    <button class="key scientific" data-action="sin">sin</button>
+                    <button class="key scientific" data-action="cos">cos</button>
+                    <button class="key scientific" data-action="tan">tan</button>
+                    <button class="key scientific" data-action="asin">asin</button>
+                    <button class="key scientific" data-action="acos">acos</button>
+                    <button class="key scientific" data-action="atan">atan</button>
+                </div>
+                
+                <div class="section-title">Functions & Constants</div>
+                <div class="sci-grid">
+                    <button class="key scientific" data-action="sqrt">√</button>
+                    <button class="key scientific" data-action="pow">x^y</button>
+                    <button class="key scientific" data-action="log">log</button>
+                    <button class="key scientific" data-action="pi">π</button>
+                    <button class="key scientific" data-action="e">e</button>
+                    <button class="key scientific" data-action="fact">x!</button>
+                </div>
+            </div>
+
+            <!-- Programmer Mode Keypad -->
+            <div class="programmer-keypad" id="programmer-keypad">
+                <div class="prog-base-selector">
+                    <button class="base-btn" data-base="HEX">HEX</button>
+                    <button class="base-btn active" data-base="DEC">DEC</button>
+                    <button class="base-btn" data-base="OCT">OCT</button>
+                    <button class="base-btn" data-base="BIN">BIN</button>
+                </div>
+
+                <div class="section-title">Hex Input & Bitwise Operations</div>
+                <div class="prog-grid">
+                    <button class="key programmer-hex" data-number="A">A</button>
+                    <button class="key programmer-hex" data-number="B">B</button>
+                    <button class="key programmer-hex" data-number="C">C</button>
+                    <button class="key programmer" data-action="AND">AND</button>
+
+                    <button class="key programmer-hex" data-number="D">D</button>
+                    <button class="key programmer-hex" data-number="E">E</button>
+                    <button class="key programmer-hex" data-number="F">F</button>
+                    <button class="key programmer" data-action="OR">OR</button>
+                    
+                    <button class="key programmer" data-action="<<">&lt;&lt;</button>
+                    <button class="key programmer" data-action=">>">&gt;&gt;</button>
+                    <button class="key programmer" data-action="MOD">MOD</button>
+                    <button class="key programmer" data-action="XOR">XOR</button>
+                </div>
+
+                <div style="margin-top: 12px;">
+                    <button class="key programmer" data-action="NOT" style="width: 100%;">NOT</button>
+                </div>
+            </div>
+            
+            <!-- Basic/Shared Keypad -->
+            <div id="keypad-basic">
+                <button class="key clear" data-action="clear">C</button>
+                <button class="key operator" data-action="backspace">⌫</button>
+                <button class="key operator" data-action="/">/</button>
+                <button class="key operator" data-action="*">×</button>
+                
+                <button class="key number-key" data-number="7">7</button>
+                <button class="key number-key" data-number="8">8</button>
+                <button class="key number-key" data-number="9">9</button>
+                <button class="key operator" data-action="-">−</button>
+                
+                <button class="key number-key" data-number="4">4</button>
+                <button class="key number-key" data-number="5">5</button>
+                <button class="key number-key" data-number="6">6</button>
+                <button class="key operator" data-action="+">+</button>
+                
+                <button class="key number-key" data-number="1">1</button>
+                <button class="key number-key" data-number="2">2</button>
+                <button class="key number-key" data-number="3">3</button>
+                <button class="key operator number-key" data-action=".">.</button>
+                
+                <button class="key number-key" data-number="0">0</button>
+                <button class="key equals" data-action="=">=</button>
+                <a class="key special" id="koushik-btn" style="grid-column: span 1; text-align:center; display:flex; justify-content:center; align-items:center; text-decoration:none;" href="https://koushikhy.netlify.app" target="_blank" rel="noopener">KOUSHIK</a>
+            </div>
+            
+        </div>
+
+        <!-- TECHNICAL DOCUMENTATION SECTION FOR ADSENSE COMPLIANCE -->
+        <section id="documentation-hub">
+            <div class="doc-card">
+                <h2>Technical Documentation & Developer Reference</h2>
+                <p>Welcome to the <strong>Cyber Calc Programmer's Hub</strong>. This tool is designed specifically for software engineers, systems architects, and computer science students who work with low-level data representation and bitwise logic.</p>
+                
+                <div class="doc-grid">
+                    <div class="doc-item">
+                        <h3>Understanding Base Conversion</h3>
+                        <p>In modern computing, data is represented in several numerical systems. Cyber Calc supports the four most critical bases:</p>
+                        <ul>
+                            <li><strong>Binary (Base-2):</strong> The fundamental language of computers, consisting only of 0s and 1s. Every bit represents a power of 2.</li>
+                            <li><strong>Octal (Base-8):</strong> Often used in Unix file permissions. Each digit represents 3 bits.</li>
+                            <li><strong>Decimal (Base-10):</strong> The standard human numerical system.</li>
+                            <li><strong>Hexadecimal (Base-16):</strong> The industry standard for representing memory addresses and color codes. Each digit represents 4 bits (a nibble).</li>
+                        </ul>
+                    </div>
+
+                    <div class="doc-item">
+                        <h3>Bitwise Logic Operations</h3>
+                        <p>Bitwise operations are essential for performance-critical code, embedded systems, and cryptography. Our calculator supports:</p>
+                        <ul>
+                            <li><strong>AND (&):</strong> Returns 1 if both bits are 1. Used for masking specific bits.</li>
+                            <li><strong>OR (|):</strong> Returns 1 if at least one bit is 1. Used for setting specific bits.</li>
+                            <li><strong>XOR (^):</strong> Returns 1 if bits are different. Essential for simple encryption and parity checks.</li>
+                            <li><strong>NOT (~):</strong> Inverts all bits (one's complement).</li>
+                            <li><strong>Shift (<< / >>):</strong> Moves bits left or right, effectively multiplying or dividing by powers of 2.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="doc-section">
+                    <h3>How to Use Cyber Calc Effectively</h3>
+                    <p>To use this advanced computation system, follow these steps:</p>
+                    <ol>
+                        <li><strong>Select Your Mode:</strong> Choose between Basic (standard math), Scientific (trigonometry and constants), or Programmer (base conversion and bitwise logic).</li>
+                        <li><strong>Choose Your Input Base:</strong> In Programmer mode, click HEX, DEC, OCT, or BIN to set the context for your input.</li>
+                        <li><strong>Perform Operations:</strong> Input your values using the specialized keypad. The real-time conversion display will automatically update all four bases simultaneously.</li>
+                        <li><strong>Analyze Results:</strong> Use the "Programmer Conversions" panel to see your result translated across all major developer formats instantly.</li>
+                    </ol>
+                </div>
+
+                <div class="doc-section">
+                    <h3>Common Developer Use Cases</h3>
+                    <p>Why do developers use Cyber Calc? Here are a few practical scenarios:</p>
+                    <ul>
+                        <li><strong>Debugging Memory Addresses:</strong> Converting hex offsets to decimal to calculate buffer sizes.</li>
+                        <li><strong>Flag Management:</strong> Using OR operations to combine configuration flags into a single integer.</li>
+                        <li><strong>Network Engineering:</strong> Calculating CIDR masks and subnetting using bitwise logic.</li>
+                        <li><strong>UI Design:</strong> Converting Hexadecimal color values to RGB (Decimal) for CSS styling.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-content">
+                <p>&copy; 2026 Programmer Calculator | Developed by <a href="https://koushikhy.netlify.app">KOUSHIK</a></p>
+                <p style="font-size: 12px; margin-top: 10px; color: #5a79bc;">Questions or Feedback? Contact: <a href="mailto:koushik4475@gmail.com" style="color:#00d4ff;">koushik4475@gmail.com</a></p>
+                <div class="footer-links">
+                    <a href="about.html">About</a>
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                    <a href="terms-of-service.html">Terms of Service</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Additional Styles for Documentation and Footer -->
+    <style>
+        #documentation-hub {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 5;
+        }
+
+        .doc-card {
+            background: rgba(16, 18, 37, 0.4);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            border-radius: 24px;
+            padding: 45px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 
+                        inset 0 0 20px rgba(0, 191, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .doc-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(0, 191, 255, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .doc-card h2 {
+            color: #00d4ff;
+            font-size: clamp(24px, 5vw, 36px);
+            margin-bottom: 30px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: 900;
+            background: linear-gradient(90deg, #00d4ff, #9933ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border-bottom: 1px solid rgba(0, 191, 255, 0.2);
+            padding-bottom: 20px;
+        }
+
+        .doc-card h3 {
+            color: #ff0099;
+            font-size: 22px;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .doc-card h3::before {
+            content: '>';
+            color: #00d4ff;
+            font-family: monospace;
+        }
+
+        .doc-card p {
+            line-height: 1.8;
+            color: #c0c0e0;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .doc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .doc-item {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 25px;
+            border-radius: 18px;
+            border: 1px solid rgba(0, 191, 255, 0.08);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .doc-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 191, 255, 0.3);
+            background: rgba(0, 0, 0, 0.35);
+        }
+
+        .doc-card ul, .doc-card ol {
+            margin-left: 20px;
+            color: #b0b0dc;
+            margin-bottom: 20px;
+        }
+
+        .doc-card li {
+            margin-bottom: 10px;
+            position: relative;
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .doc-card li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: #00d4ff;
+            font-size: 12px;
+            top: 4px;
+        }
+
+        footer {
+            width: 100%;
+            padding: 60px 20px;
+            background: rgba(10, 10, 22, 0.95);
+            border-top: 1px solid rgba(0, 191, 255, 0.15);
+            text-align: center;
+            z-index: 5;
+            position: relative;
+            margin-top: 50px;
+        }
+
+        .footer-content p {
+            font-size: 14px;
+            color: #6a89cc;
+            letter-spacing: 1px;
+        }
+
+        .footer-content a {
+            color: #00d4ff;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 25px;
+        }
+
+        .footer-links a {
+            color: #6a89cc;
+            text-decoration: none;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            padding: 8px 16px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+        }
+
+        .footer-links a:hover {
+            color: #00d4ff;
+            border-color: rgba(0, 191, 255, 0.2);
+            background: rgba(0, 191, 255, 0.05);
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 600px) {
+            #container {
+                padding: 30px 15px;
+                gap: 40px;
+            }
+
+            .doc-card {
+                padding: 25px 20px;
+            }
+
+            .doc-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script>
+        // --- Calculator Logic ---
+        class AdvancedCalculator {
+            constructor() {
+                this.resultElement = document.getElementById('result');
+                this.expressionElement = document.getElementById('expression');
+                this.progConvElement = document.getElementById('programmer-conversions');
+                this.currentMode = 'basic';
+                this.currentBase = 'DEC';
+                this.clear();
+                this.setupEventListeners();
+            }
+            
+            clear() {
+                this.currentOperand = '0';
+                this.previousOperand = '';
+                this.operation = undefined;
+                this.updateDisplay();
+                this.updateConversions();
+            }
+            
+            delete() {
+                if (this.currentOperand.length > 0) {
+                    this.currentOperand = this.currentOperand.toString().slice(0, -1);
+                }
+                if (this.currentOperand === '' || this.currentOperand === '-') {
+                    this.currentOperand = '0';
+                }
+                this.updateDisplay();
+                this.updateConversions();
+            }
+
+            toDecInt(operandStr) {
+                if (!operandStr || operandStr === '' || operandStr === 'NaN') return 0;
+
+                let base = 10;
+                switch (this.currentBase) {
+                    case 'HEX': base = 16; break;
+                    case 'OCT': base = 8; break;
+                    case 'BIN': base = 2; break;
+                    case 'DEC': base = 10; break;
+                }
+                
+                const decVal = parseInt(operandStr, base);
+                if (isNaN(decVal)) return 0;
+                return Math.trunc(decVal);
+            }
+
+            fromDecInt(decInt) {
+                const num = parseInt(decInt);
+                if (isNaN(num)) return 'Error';
+
+                switch (this.currentBase) {
+                    case 'HEX': return num.toString(16).toUpperCase();
+                    case 'OCT': return num.toString(8);
+                    case 'BIN': return num.toString(2);
+                    case 'DEC': 
+                    default: return num.toString(10);
+                }
+            }
+            
+            appendNumber(number) {
+                if (this.currentMode === 'basic' || this.currentMode === 'scientific') {
+                    if (number === '.' && this.currentOperand.includes('.')) return;
+                    if (this.currentOperand === '0' && number !== '.') {
+                        this.currentOperand = number;
+                    } else {
+                        this.currentOperand = this.currentOperand.toString() + number;
+                    }
+                } else if (this.currentMode === 'programmer') {
+                    const newOperand = this.currentOperand === '0' ? number : this.currentOperand.toString() + number;
+                    
+                    let regex;
+                    switch (this.currentBase) {
+                        case 'HEX': regex = /^[0-9A-F]*$/i; break;
+                        case 'DEC': regex = /^[0-9]*$/i; break;
+                        case 'OCT': regex = /^[0-7]*$/i; break;
+                        case 'BIN': regex = /^[0-1]*$/i; break;
+                        default: return;
+                    }
+
+                    if (regex.test(newOperand)) {
+                        this.currentOperand = newOperand.toUpperCase();
+                    }
+                }
+                this.updateDisplay();
+                this.updateConversions();
+            }
+            
+            chooseOperation(operation) {
+                if (this.currentOperand === '' || this.currentOperand === '0') return;
+                
+                if (this.previousOperand !== '') {
+                    this.compute();
+                }
+                
+                this.operation = operation;
+                
+                if (this.currentMode === 'programmer') {
+                    this.previousOperand = this.toDecInt(this.currentOperand).toString();
+                } else {
+                    this.previousOperand = this.currentOperand;
+                }
+
+                this.currentOperand = '0';
+                this.updateDisplay();
+            }
+            
+            compute() {
+                let computation;
+                
+                if (this.currentMode === 'programmer') {
+                    const prevDec = parseInt(this.previousOperand);
+                    const currentDec = this.toDecInt(this.currentOperand);
+
+                    if (isNaN(prevDec) || isNaN(currentDec)) return;
+
+                    switch (this.operation) {
+                        case '+': computation = prevDec + currentDec; break;
+                        case '-': computation = prevDec - currentDec; break;
+                        case '*': computation = prevDec * currentDec; break;
+                        case '/': 
+                            if (currentDec === 0) {
+                                this.currentOperand = 'Error: Divide by Zero';
+                                this.operation = undefined;
+                                this.previousOperand = '';
+                                this.updateDisplay();
+                                return;
+                            }
+                            computation = Math.trunc(prevDec / currentDec); break;
+                        case 'MOD': computation = prevDec % currentDec; break;
+                        case 'AND': computation = prevDec & currentDec; break;
+                        case 'OR': computation = prevDec | currentDec; break;
+                        case 'XOR': computation = prevDec ^ currentDec; break;
+                        case '<<': computation = prevDec << currentDec; break;
+                        case '>>': computation = prevDec >> currentDec; break;
+                        default: return;
+                    }
+                    
+                    this.currentOperand = this.fromDecInt(computation).toString();
+                } else {
+                    const prev = parseFloat(this.previousOperand);
+                    const current = parseFloat(this.currentOperand);
+                    if (isNaN(prev) || isNaN(current)) return;
+                    
+                    switch (this.operation) {
+                        case '+': computation = prev + current; break;
+                        case '-': computation = prev - current; break;
+                        case '*': computation = prev * current; break;
+                        case '/': computation = prev / current; break;
+                        case 'pow': computation = Math.pow(prev, current); break;
+                        default: return;
+                    }
+
+                    computation = parseFloat(computation.toFixed(12)); 
+                    this.currentOperand = computation.toString();
+                }
+
+                this.operation = undefined;
+                this.previousOperand = '';
+                this.updateDisplay();
+                this.updateConversions();
+            }
+            
+            applySciFunction(func) {
+                const current = parseFloat(this.currentOperand);
+                if (isNaN(current)) {
+                    this.currentOperand = 'Error';
+                    this.updateDisplay();
+                    return;
+                }
+                
+                let result;
+                let calculation = true;
+
+                switch (func) {
+                    case 'sin': result = Math.sin(current * Math.PI / 180); break;
+                    case 'cos': result = Math.cos(current * Math.PI / 180); break;
+                    case 'tan': 
+                        if (Math.abs(current % 90) === 0 && (current / 90) % 2 !== 0) {
+                            result = Infinity;
+                        } else {
+                            result = Math.tan(current * Math.PI / 180); 
+                        }
+                        break;
+                    case 'asin': result = Math.asin(current) * 180 / Math.PI; break;
+                    case 'acos': result = Math.acos(current) * 180 / Math.PI; break;
+                    case 'atan': result = Math.atan(current) * 180 / Math.PI; break;
+                    case 'sqrt': result = Math.sqrt(current); break;
+                    case 'log': result = Math.log10(current); break;
+                    case 'pi': result = Math.PI; calculation = false; break;
+                    case 'e': result = Math.E; calculation = false; break;
+                    case 'fact': result = this.factorial(current); break;
+                    default: return;
+                }
+                
+                if (calculation) {
+                    result = parseFloat(result.toFixed(12));
+                }
+
+                this.currentOperand = result.toString();
+                this.operation = undefined;
+                this.previousOperand = '';
+                this.updateDisplay();
+            }
+
+            applyProgFunction(func) {
+                const currentDec = this.toDecInt(this.currentOperand);
+                if (isNaN(currentDec)) {
+                    this.currentOperand = 'Error';
+                    this.updateDisplay();
+                    this.updateConversions();
+                    return;
+                }
+
+                let computation;
+                switch (func) {
+                    case 'NOT': 
+                        computation = ~currentDec; 
+                        break;
+                    default: return;
+                }
+
+                this.currentOperand = this.fromDecInt(computation).toString();
+                this.operation = undefined;
+                this.previousOperand = '';
+                this.updateDisplay();
+                this.updateConversions();
+            }
+            
+            factorial(n) {
+                if (n < 0 || !Number.isInteger(n)) return NaN;
+                if (n === 0 || n === 1) return 1;
+                let result = 1;
+                for (let i = 2; i <= n; i++) {
+                    result *= i;
+                }
+                return result;
+            }
+            
+            displayName() {
+                this.currentOperand = 'KOUSHIK';
+                this.operation = undefined;
+                this.previousOperand = '';
+                this.updateDisplay();
+                triggerNameEffect();
+            }
+
+            switchMode(mode) {
+                this.currentMode = mode;
+                this.toggleSections(mode);
+                this.clear();
+            }
+
+            switchBase(base) {
+                document.querySelectorAll('.base-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector(`[data-base="${base}"]`).classList.add('active');
+
+                const decValue = this.toDecInt(this.currentOperand);
+                this.currentBase = base;
+                this.currentOperand = this.fromDecInt(decValue).toString();
+
+                this.toggleInputKeys(base);
+
+                this.updateDisplay();
+                this.updateConversions();
+            }
+
+            toggleInputKeys(base) {
+                const hexKeys = document.querySelectorAll('.programmer-hex');
+                const periodKey = document.querySelector('[data-action="."]');
+
+                if (base === 'HEX') {
+                    hexKeys.forEach(key => key.style.display = 'flex');
+                } else {
+                    hexKeys.forEach(key => key.style.display = 'none');
+                }
+
+                if (base === 'DEC' || this.currentMode === 'basic' || this.currentMode === 'scientific') {
+                    periodKey.style.display = 'flex';
+                } else {
+                    periodKey.style.display = 'none';
+                }
+            }
+            
+            updateDisplay() {
+                let displayValue = this.currentOperand;
+
+                if (displayValue === 'NaN' || displayValue.toLowerCase() === 'nan') {
+                    displayValue = 'Error';
+                } else if (displayValue === 'Infinity' || displayValue === '-Infinity') {
+                    displayValue = 'Error: Overflow';
+                }
+                
+                this.resultElement.innerText = displayValue;
+                const wrapper = document.querySelector('.result-wrapper');
+                if (wrapper) {
+                    requestAnimationFrame(() => {
+                        wrapper.scrollLeft = wrapper.scrollWidth;
+                    });
+                }
+
+                if (this.operation != null) {
+                    const prevDisplay = this.currentMode === 'programmer' && this.previousOperand !== '' ? this.fromDecInt(this.previousOperand) : this.previousOperand;
+                    this.expressionElement.innerText = `${prevDisplay} ${this.operation}`;
+                } else {
+                    this.expressionElement.innerText = '';
+                }
+                this.expressionElement.scrollLeft = this.expressionElement.scrollWidth;
+            }
+
+            updateConversions() {
+                if (this.currentMode !== 'programmer') return;
+
+                const decVal = this.toDecInt(this.currentOperand);
+                
+                if (isNaN(decVal)) {
+                    document.getElementById('conv-hex').innerText = 'ERROR';
+                    document.getElementById('conv-dec').innerText = 'ERROR';
+                    document.getElementById('conv-oct').innerText = 'ERROR';
+                    document.getElementById('conv-bin').innerText = 'ERROR';
+                    return;
+                }
+
+                document.getElementById('conv-hex').innerText = (decVal).toString(16).toUpperCase();
+                document.getElementById('conv-dec').innerText = (decVal).toString(10);
+                document.getElementById('conv-oct').innerText = (decVal).toString(8);
+                const binStr = (decVal >>> 0).toString(2);
+                document.getElementById('conv-bin').innerText = binStr.padStart(32, '0').match(/.{1,4}/g).join(' ');
+            }
+            
+            setupEventListeners() {
+                document.querySelectorAll('.number-key, .programmer-hex').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const number = button.getAttribute('data-number') || button.getAttribute('data-action');
+                        this.appendNumber(number);
+                        animateButton(button);
+                    });
+                });
+                
+                document.querySelectorAll('[data-action]').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const action = button.getAttribute('data-action');
+                        
+                        if (action === 'clear') {
+                            this.clear();
+                        } else if (action === 'backspace') {
+                            this.delete();
+                        } else if (action === '=') {
+                            this.compute();
+                        } else if (['+', '-', '*', '/', 'pow', 'MOD', 'AND', 'OR', 'XOR', '<<', '>>'].includes(action)) {
+                            this.chooseOperation(action);
+                        } else if (['sin', 'cos', 'tan', 'sqrt', 'log', 'pi', 'e', 'fact', 'asin', 'acos', 'atan'].includes(action)) {
+                            this.applySciFunction(action);
+                        } else if (['NOT'].includes(action)) {
+                            this.applyProgFunction(action);
+                        } else if (action === '.') {
+                            this.appendNumber(action);
+                        }
+                        
+                        animateButton(button);
+                    });
+                });
+                
+                document.querySelectorAll('[data-mode]').forEach(button => {
+                    button.addEventListener('click', () => {
+                        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                        button.classList.add('active');
+                        this.switchMode(button.getAttribute('data-mode'));
+                        animateButton(button);
+                    });
+                });
+
+                document.querySelectorAll('[data-base]').forEach(button => {
+                    button.addEventListener('click', () => {
+                        this.switchBase(button.getAttribute('data-base'));
+                        animateButton(button);
+                    });
+                });
+            }
+            
+            toggleSections(mode) {
+                const sciSection = document.getElementById('scientific-section');
+                const progKeypad = document.getElementById('programmer-keypad');
+                const progConv = document.getElementById('programmer-conversions');
+
+                sciSection.classList.remove('show');
+                progKeypad.classList.remove('show');
+                progConv.classList.remove('show');
+                
+                document.querySelectorAll('.programmer-hex').forEach(key => key.style.display = 'none');
+                document.querySelector('[data-action="."]').style.display = 'flex';
+                
+                if (mode === 'scientific') {
+                    sciSection.classList.add('show');
+                } else if (mode === 'programmer') {
+                    progKeypad.classList.add('show');
+                    progConv.classList.add('show');
+                    
+                    this.currentBase = 'DEC';
+                    document.querySelectorAll('.base-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelector('[data-base="DEC"]').classList.add('active');
+                    this.toggleInputKeys('DEC'); 
+                }
+
+                this.currentOperand = '0';
+                this.previousOperand = '';
+                this.operation = undefined;
+                this.updateDisplay();
+                this.updateConversions();
+            }
+        }
+
+        function animateButton(button) {
+            button.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                button.style.transform = '';
+            }, 150);
+            
+            const glow = document.getElementById('calculator-glow');
+            glow.classList.add('active-glow');
+            setTimeout(() => {
+                glow.classList.remove('active-glow');
+            }, 500);
+        }
+
+        function triggerNameEffect() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    createNameParticle();
+                }, i * 50);
+            }
+            
+            const calculator = document.getElementById('calculator');
+            const originalBg = calculator.style.background;
+            calculator.style.background = 'rgba(147, 51, 234, 0.3)';
+            setTimeout(() => {
+                calculator.style.background = originalBg;
+            }, 2500);
+        }
+
+        const calculator = new AdvancedCalculator();
+
+        // --- Three.js Particle Background ---
+        let scene, camera, renderer, particles, particleSystem;
+        let particleCount = window.innerWidth < 600 ? 400 : 1500;
+        let particlePositions = [];
+        let particleVelocities = [];
+        
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 35;
+            
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+            
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                positions[i] = (Math.random() - 0.5) * 120;
+                positions[i + 1] = (Math.random() - 0.5) * 120;
+                positions[i + 2] = (Math.random() - 0.5) * 120;
+                
+                particlePositions.push({
+                    x: positions[i],
+                    y: positions[i + 1],
+                    z: positions[i + 2]
+                });
+                
+                particleVelocities.push({
+                    x: (Math.random() - 0.5) * 0.08,
+                    y: (Math.random() - 0.5) * 0.08,
+                    z: (Math.random() - 0.5) * 0.08
+                });
+                
+                colors[i] = Math.random() * 0.6 + 0.4;
+                colors[i + 1] = Math.random() * 0.4 + 0.5;
+                colors[i + 2] = Math.random() * 0.6 + 0.4;
+            }
+            
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            
+            const material = new THREE.PointsMaterial({
+                size: 0.9,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.85
+            });
+            
+            particleSystem = new THREE.Points(geometry, material);
+            scene.add(particleSystem);
+            
+            const torusGeometry = new THREE.TorusGeometry(15, 4, 16, 100);
+            const torusMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x00d4ff, 
+                wireframe: true,
+                transparent: true,
+                opacity: 0.15
+            });
+            const torus = new THREE.Mesh(torusGeometry, torusMaterial);
+            torus.rotation.x = Math.PI / 2;
+            scene.add(torus);
+            
+            const octahedronGeometry = new THREE.OctahedronGeometry(10, 0);
+            const octahedronMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x9933ff, 
+                wireframe: true,
+                transparent: true,
+                opacity: 0.12
+            });
+            const octahedron = new THREE.Mesh(octahedronGeometry, octahedronMaterial);
+            scene.add(octahedron);
+            
+            const sphereGeometry = new THREE.SphereGeometry(6, 32, 32);
+            const sphereMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0xff0099, 
+                wireframe: true,
+                transparent: true,
+                opacity: 0.1
+            });
+            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            scene.add(sphere);
+            
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                particleSystem.rotation.x += 0.0005;
+                particleSystem.rotation.y += 0.001;
+                
+                const positions = particleSystem.geometry.attributes.position.array;
+                for (let i = 0; i < positions.length; i += 3) {
+                    positions[i] += particleVelocities[i/3].x;
+                    positions[i + 1] += particleVelocities[i/3].y;
+                    positions[i + 2] += particleVelocities[i/3].z;
+                    
+                    if (Math.abs(positions[i]) > 60) particleVelocities[i/3].x *= -1;
+                    if (Math.abs(positions[i + 1]) > 60) particleVelocities[i/3].y *= -1;
+                    if (Math.abs(positions[i + 2]) > 60) particleVelocities[i/3].z *= -1;
+                }
+                particleSystem.geometry.attributes.position.needsUpdate = true;
+                
+                torus.rotation.y += 0.003;
+                octahedron.rotation.x += 0.002;
+                octahedron.rotation.y += 0.003;
+                sphere.rotation.z += 0.002;
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            document.getElementById('particle-count').textContent = particleCount;
+            
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+        
+        function createNameParticle() {
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(3);
+            const colors = new Float32Array(3);
+            
+            positions[0] = (Math.random() - 0.5) * 60;
+            positions[1] = (Math.random() - 0.5) * 60;
+            positions[2] = (Math.random() - 0.5) * 30;
+            
+            colors[0] = Math.random() * 0.5 + 0.5;
+            colors[1] = Math.random() * 0.3;
+            colors[2] = Math.random() * 0.5 + 0.5;
+            
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            
+            const material = new THREE.PointsMaterial({
+                size: 3,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.9
+            });
+            
+            const particle = new THREE.Points(geometry, material);
+            scene.add(particle);
+            
+            let life = 0;
+            function animateParticle() {
+                life += 0.02;
+                particle.position.y += 0.2;
+                particle.material.opacity = 1 - life;
+                
+                if (life < 1) {
+                    requestAnimationFrame(animateParticle);
+                } else {
+                    scene.remove(particle);
+                }
+            }
+            animateParticle();
+        }
+        
+        window.addEventListener('load', () => {
+            initThreeJS();
+        });
+    </script>
+</body>
+</html>
