@@ -591,8 +591,8 @@
     <div id="container">
         <div id="canvas-container"></div>
         <div class="glow" id="calculator-glow"></div>
-        <div id="calculator">
-            <div class="title-bar">
+        <div id="calculator" class="calculator-container" data-google-anno-skip="true">
+            <header class="title-bar" data-google-anno-skip="true">
                 <div>
                     <h1 class="title">CYBER CAL</h1>
                     <div class="subtitle">Advanced Computation System</div>
@@ -601,22 +601,22 @@
                     <a class="dev-btn" href="https://koushikhy.netlify.app" target="_blank" rel="noopener">View Developer</a>
                     <div class="particle-counter">Particles: <span id="particle-count">0</span></div>
                 </div>
-            </div>
+            </header>
             
-            <div class="mode-selector">
+            <div class="mode-selector" data-google-anno-skip="true">
                 <button class="mode-btn active" data-mode="basic">Basic</button>
                 <button class="mode-btn" data-mode="scientific">Scientific</button>
                 <button class="mode-btn" data-mode="programmer">Programmer</button>
             </div>
             
             <!-- Main Display Area -->
-            <div id="display">
+            <div id="display" data-google-anno-skip="true">
                 <div id="expression"></div>
                 <div class="result-wrapper"><div id="result">0</div></div>
             </div>
 
             <!-- Programmer Conversions Display -->
-            <div id="programmer-conversions">
+            <div id="programmer-conversions" data-google-anno-skip="true">
                 <div class="conversion-item"><span class="conversion-label">HEX:</span> <div class="conversion-value" id="conv-hex">0</div></div>
                 <div class="conversion-item"><span class="conversion-label">DEC:</span> <div class="conversion-value" id="conv-dec">0</div></div>
                 <div class="conversion-item"><span class="conversion-label">OCT:</span> <div class="conversion-value" id="conv-oct">0</div></div>
@@ -624,7 +624,7 @@
             </div>
             
             <!-- Scientific Mode Keypad -->
-            <div class="scientific-section" id="scientific-section">
+            <div class="scientific-section" id="scientific-section" data-google-anno-skip="true">
                 <div class="section-title">Trigonometry (Input in Degrees)</div>
                 <div class="sci-grid">
                     <button class="key scientific" data-action="sin">sin</button>
@@ -647,7 +647,7 @@
             </div>
 
             <!-- Programmer Mode Keypad -->
-            <div class="programmer-keypad" id="programmer-keypad">
+            <div class="programmer-keypad" id="programmer-keypad" data-google-anno-skip="true">
                 <div class="prog-base-selector">
                     <button class="base-btn" data-base="HEX">HEX</button>
                     <button class="base-btn active" data-base="DEC">DEC</button>
@@ -679,7 +679,7 @@
             </div>
             
             <!-- Basic/Shared Keypad -->
-            <div id="keypad-basic">
+            <div id="keypad-basic" data-google-anno-skip="true">
                 <button class="key clear" data-action="clear">C</button>
                 <button class="key operator" data-action="backspace">⌫</button>
                 <button class="key operator" data-action="/">/</button>
@@ -768,8 +768,10 @@
                 <p style="font-size: 12px; margin-top: 10px; color: #5a79bc;">Questions or Feedback? Contact: <a href="mailto:koushik4475@gmail.com" style="color:#00d4ff;">koushik4475@gmail.com</a></p>
                 <div class="footer-links">
                     <a href="about.html">About</a>
-                    <a href="privacy-policy.html">Privacy Policy</a>
-                    <a href="terms-of-service.html">Terms of Service</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="privacy-policy.html">Privacy (Full)</a>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="terms-of-service.html">Terms (Full)</a>
                 </div>
             </div>
         </footer>
@@ -1413,6 +1415,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setClearColor(0x000000, 0);
             renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.domElement.setAttribute('data-google-anno-skip', 'true');
             document.getElementById('canvas-container').appendChild(renderer.domElement);
             
             const positions = new Float32Array(particleCount * 3);
