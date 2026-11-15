@@ -1,6 +1,9 @@
 <div align="center">
 
-# 🚀 CYBER CALC | Advanced Computation System
+# Developer Calculator | Basic, Scientific & Programmer Calculator Web App
+
+Developer Calculator is a browser-based calculator that brings basic arithmetic, scientific calculations, and programmer-oriented tools into one responsive interface. It pairs multi-mode calculations with a cyberpunk-inspired visual design, 3D-style effects, and a lightweight front-end setup. Use the live demo and quick-start steps below to explore the calculator.
+
 
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=32&duration=2800&pause=2000&color=00D4FF&center=true&vCenter=true&width=940&lines=3-IN-1+CALCULATOR+WITH+CYBERPUNK+AESTHETICS;BASIC+%E2%80%A2+SCIENTIFIC+%E2%80%A2+PROGRAMMER+MODE" alt="Typing SVG" />
 
