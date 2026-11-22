@@ -1010,7 +1010,7 @@
                 }
                 
                 const decVal = parseInt(operandStr, base);
-                if (isNaN(decVal)) return 0;
+                if (Number.isNaN(decVal)) return Number.NaN;
                 return Math.trunc(decVal);
             }
 
@@ -1093,10 +1093,22 @@
                                 this.operation = undefined;
                                 this.previousOperand = '';
                                 this.updateDisplay();
+                                this.updateConversions();
                                 return;
                             }
-                            computation = Math.trunc(prevDec / currentDec); break;
-                        case 'MOD': computation = prevDec % currentDec; break;
+                            computation = Math.trunc(prevDec / currentDec);
+                            break;
+                        case 'MOD':
+                            if (currentDec === 0) {
+                                this.currentOperand = 'Error: Modulo by Zero';
+                                this.operation = undefined;
+                                this.previousOperand = '';
+                                this.updateDisplay();
+                                this.updateConversions();
+                                return;
+                            }
+                            computation = prevDec % currentDec;
+                            break;
                         case 'AND': computation = prevDec & currentDec; break;
                         case 'OR': computation = prevDec | currentDec; break;
                         case 'XOR': computation = prevDec ^ currentDec; break;
