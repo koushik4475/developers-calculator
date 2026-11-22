@@ -585,6 +585,15 @@
                 font-size: 17px;
             }
         }
+            /* Respect reduced-motion preferences. */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1488,8 +1497,15 @@
             const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
             scene.add(sphere);
             
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+            let animationFrame = null;
+
             function animate() {
-                requestAnimationFrame(animate);
+                if (document.hidden || reducedMotion.matches) {
+                    renderer.render(scene, camera);
+                    return;
+                }
+                animationFrame = requestAnimationFrame(animate);
                 
                 particleSystem.rotation.x += 0.0005;
                 particleSystem.rotation.y += 0.001;
@@ -1516,6 +1532,24 @@
             
             animate();
             document.getElementById('particle-count').textContent = particleCount;
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    if (animationFrame !== null) cancelAnimationFrame(animationFrame);
+                    animationFrame = null;
+                } else if (!reducedMotion.matches) {
+                    animate();
+                }
+            });
+            reducedMotion.addEventListener('change', () => {
+                if (reducedMotion.matches) {
+                    if (animationFrame !== null) cancelAnimationFrame(animationFrame);
+                    animationFrame = null;
+                    renderer.render(scene, camera);
+                } else if (!document.hidden) {
+                    animate();
+                }
+            });
             
             window.addEventListener('resize', () => {
                 camera.aspect = window.innerWidth / window.innerHeight;
