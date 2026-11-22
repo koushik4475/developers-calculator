@@ -1357,6 +1357,39 @@
                         animateButton(button);
                     });
                 });
+
+                // Mirror the keypad with physical keyboard input.
+                document.addEventListener('keydown', event => {
+                    if (event.ctrlKey || event.metaKey || event.altKey) return;
+                    const target = event.target;
+                    if (target && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))) return;
+
+                    const key = event.key;
+                    const isProgrammer = this.currentMode === 'programmer';
+                    const validDigit = isProgrammer
+                        ? (this.currentBase === 'HEX' ? /^[0-9a-f]$/i.test(key)
+                            : this.currentBase === 'OCT' ? /^[0-7]$/.test(key)
+                            : this.currentBase === 'BIN' ? /^[01]$/.test(key)
+                            : /^[0-9]$/.test(key))
+                        : /^[0-9]$/.test(key);
+
+                    if (validDigit || (key === '.' && !isProgrammer)) {
+                        event.preventDefault();
+                        this.appendNumber(key.toUpperCase());
+                    } else if (key === 'Enter' || key === '=') {
+                        event.preventDefault();
+                        this.compute();
+                    } else if (key === 'Backspace') {
+                        event.preventDefault();
+                        this.delete();
+                    } else if (key === 'Escape') {
+                        event.preventDefault();
+                        this.clear();
+                    } else if (['+', '-', '*', '/'].includes(key)) {
+                        event.preventDefault();
+                        this.chooseOperation(key);
+                    }
+                });
             }
             
             toggleSections(mode) {
