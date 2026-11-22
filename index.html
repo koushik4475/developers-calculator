@@ -1572,6 +1572,9 @@
         }
         
         function createNameParticle() {
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+            if (reducedMotion.matches || document.hidden || !scene) return;
+
             const geometry = new THREE.BufferGeometry();
             const positions = new Float32Array(3);
             const colors = new Float32Array(3);
@@ -1598,15 +1601,26 @@
             scene.add(particle);
             
             let life = 0;
+            function removeParticle() {
+                scene.remove(particle);
+                geometry.dispose();
+                material.dispose();
+            }
+
             function animateParticle() {
+                if (reducedMotion.matches || document.hidden) {
+                    removeParticle();
+                    return;
+                }
+
                 life += 0.02;
                 particle.position.y += 0.2;
-                particle.material.opacity = 1 - life;
-                
+                material.opacity = 1 - life;
+
                 if (life < 1) {
                     requestAnimationFrame(animateParticle);
                 } else {
-                    scene.remove(particle);
+                    removeParticle();
                 }
             }
             animateParticle();
