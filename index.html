@@ -1423,7 +1423,8 @@
             renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setClearColor(0x000000, 0);
-            renderer.setPixelRatio(window.devicePixelRatio);
+            // Cap device pixel ratio to avoid excessive GPU work on high-density displays.
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
             renderer.domElement.setAttribute('data-google-anno-skip', 'true');
             document.getElementById('canvas-container').appendChild(renderer.domElement);
             
